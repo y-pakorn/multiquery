@@ -4,72 +4,53 @@ On-chain query batcher for CosmWasm. Similar to [SCB 10X](https://github.com/scb
 
 ## Example
 
-On `bombay-12` network, use the following query:
+Query:
 
-```json
-[
+```javascript
+const response = await terra.wasm.contractQuery(MULTIQUERY, [
   {
-    "bank": {
-      "all_balances": {
-        "address": "terra19dtgj9j5j7kyf3pmejqv8vzfpxtejaypgzkz5u"
-      }
-    }
+    bank: {
+      all_balances: {
+        address: RED_BANK,
+      },
+    },
   },
   {
-    "wasm": {
-      "smart": {
-        "contract_addr": "terra12hgwnpupflfpuual532wgrxu2gjp0tcagzgx4n",
-        "msg": "eyJ0b2tlbl9pbmZvIjp7fX0="
-      }
-    }
-  }
-]
+    wasm: {
+      smart: {
+        contract_addr: MARS_TOKEN,
+        msg: encodeBase64({ token_info: {} }),
+      },
+    },
+  },
+]);
+
+const responseParsed = response.map((item) => { return decodeBase64(item.data); });
+
+console.log(responseParsed);
 ```
 
-where `eyJ0b2tlbl9pbmZvIjp7fX0=` is the base64 encoding of the query message `{"token_info":{}}`.
-
-This returns the response:
+Response:
 
 ```json
 [
   {
-    "success": true,
-    "data": "eyJhbW91bnQiOlt7ImRlbm9tIjoidWx1bmEiLCJhbW91bnQiOiI2MjI2NjMwOTI5MzIifSx7ImRlbm9tIjoidXVzZCIsImFtb3VudCI6IjE2OTUxODkxMTQzODYzMiJ9XX0="
+    "amount": [
+      {
+        "denom": "uluna",
+        "amount": "622641301593"
+      },
+      {
+        "denom": "uusd",
+        "amount": "169517320897682"
+      }
+    ]
   },
   {
-    "success": true,
-    "data": "eyJuYW1lIjoiTUFSUyIsInN5bWJvbCI6Ik1BUlMiLCJkZWNpbWFscyI6NiwidG90YWxfc3VwcGx5IjoiMTAwMDAwMDAwMDAwMDAwMCJ9"
-  }
-]
-```
-
-The base64-encoded results can be decoded as:
-
-```json
-[
-  {
-    "success": true,
-    "data": {
-      "amount": [
-        {
-          "denom": "uluna",
-          "amount": "622663092932"
-        },
-        {
-          "denom": "uusd",
-          "amount": "169518961438632"
-        }
-      ]
-    }
-  },
-  {
-    "success": true,
-    "data": {
-      "name": "MARS",
-      "symbol": "MARS",
-      "decimals": 6,
-      "total_supply": "1000000000000000"
-    }
+    "name": "MARS",
+    "symbol": "MARS",
+    "decimals": 6,
+    "total_supply": "1000000000000000"
   }
 ]
 ```

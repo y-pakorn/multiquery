@@ -40,10 +40,7 @@ type MultiQueryResponse = {
   );
 
   const responseParsed = response.map((item) => {
-    return {
-      success: item.success,
-      data: decodeBase64(item.data),
-    };
+    return decodeBase64(item.data);
   });
 
   console.log("query =", JSON.stringify(query, null, 2));
