@@ -13,7 +13,7 @@ import * as keystore from "./keystore";
 
 const DEFAULT_GAS_SETTINGS = {
   gasPrices: "0.15uusd",
-  gasAdjustment: 1.4,
+  gasAdjustment: 1.2,
 };
 
 /**
@@ -33,7 +33,9 @@ export function createLCDClient(network: string): LCDClient {
   } else if (network === "localterra") {
     return new LocalTerra();
   } else {
-    throw new Error(`invalid network: ${network}, must be mainnet|testnet|localterra`);
+    throw new Error(
+      `invalid network: ${network}, must be mainnet|testnet|localterra`
+    );
   }
 }
 
@@ -45,7 +47,9 @@ export async function createWallet(
   keyName: string,
   keyDir: string
 ): Promise<Wallet> {
-  const password = await promptly.password("Enter password to decrypt the key:");
+  const password = await promptly.password(
+    "Enter password to decrypt the key:"
+  );
   return terra.wallet(keystore.load(keyName, keyDir, password));
 }
 
@@ -81,7 +85,9 @@ export async function sendTxWithConfirm(signer: Wallet, msgs: Msg[]) {
  */
 export async function storeCodeWithConfirm(signer: Wallet, filePath: string) {
   const code = fs.readFileSync(filePath).toString("base64");
-  const result = await sendTxWithConfirm(signer, [new MsgStoreCode(signer.key.accAddress, code)]);
+  const result = await sendTxWithConfirm(signer, [
+    new MsgStoreCode(signer.key.accAddress, code),
+  ]);
   return parseInt(result.logs[0].eventsByType["store_code"]["code_id"][0]);
 }
 
@@ -111,5 +117,5 @@ export function encodeBase64(obj: object | string | number) {
  * Decode a base64 string into JSON object
  */
 export function decodeBase64<T>(str: string): T {
-  return JSON.parse(Buffer.from(str, "base64").toString("utf8"))
+  return JSON.parse(Buffer.from(str, "base64").toString("utf8"));
 }

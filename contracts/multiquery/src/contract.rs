@@ -45,3 +45,8 @@ fn process_query_result(result: QuerierResult) -> StdResult<MultiQueryResponseIt
 
     Ok(item)
 }
+
+#[entry_point]
+pub fn migrate(_deps: DepsMut, _env: Env, _msg: Empty) -> StdResult<Response> {
+    Ok(Response::new())
+}

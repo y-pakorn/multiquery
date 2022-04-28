@@ -32,6 +32,17 @@ type MultiQueryResponse = {
         },
       },
     },
+    {
+      custom: {
+        route: "oracle",
+        query_data: {
+          exchange_rates: {
+            base_denom: "uluna",
+            quote_denoms: ["uusd"],
+          },
+        },
+      },
+    },
   ];
 
   const response: MultiQueryResponse = await terra.wasm.contractQuery(
@@ -43,6 +54,6 @@ type MultiQueryResponse = {
     return decodeBase64(item.data);
   });
 
-  console.log("query =", JSON.stringify(query, null, 2));
-  console.log("response =", JSON.stringify(responseParsed, null, 2));
+  console.log("query:", JSON.stringify(query, null, 2));
+  console.log("\nresponse:", JSON.stringify(responseParsed, null, 2));
 })();
