@@ -22,7 +22,10 @@ impl Cw20Querier {
                     .unwrap(),
                 )),
                 None => SystemResult::Err(SystemError::InvalidRequest {
-                    error: format!("[mock]: balance not set for cw20 `{}` and user `{}`", contract_addr, address),
+                    error: format!(
+                        "[mock]: balance not set for cw20 `{}` and user `{}`",
+                        contract_addr, address
+                    ),
                     request: Default::default(),
                 }),
             },

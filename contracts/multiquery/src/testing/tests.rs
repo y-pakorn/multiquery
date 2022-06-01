@@ -1,9 +1,10 @@
+use std::marker::PhantomData;
 use std::str;
 
 use cosmwasm_std::testing::{mock_env, MockApi, MockStorage};
 use cosmwasm_std::{
-    coin, from_binary, to_binary, BalanceResponse, BankQuery, OwnedDeps, QueryRequest,
-    Uint128, WasmQuery,
+    coin, from_binary, to_binary, BalanceResponse, BankQuery, OwnedDeps, QueryRequest, Uint128,
+    WasmQuery,
 };
 use cw20::{BalanceResponse as Cw20BalanceResponse, Cw20QueryMsg};
 use serde_json;
@@ -17,6 +18,7 @@ fn setup_test() -> OwnedDeps<MockStorage, MockApi, CustomQuerier> {
         storage: MockStorage::default(),
         api: MockApi::default(),
         querier: CustomQuerier::new(&[("alice", &[coin(12345, "uluna")])]),
+        custom_query_type: PhantomData,
     };
 
     deps.querier.set_cw20_balance("bob", 69420);
@@ -133,5 +135,8 @@ fn serializing_response() {
     let deps = setup_test();
     let res_bin = query(deps.as_ref(), mock_env(), create_mock_query()).unwrap();
 
-    assert_eq!(str::from_utf8(res_bin.as_slice()).unwrap(), json.replace("\n", "").replace(" ", ""));
+    assert_eq!(
+        str::from_utf8(res_bin.as_slice()).unwrap(),
+        json.replace("\n", "").replace(" ", "")
+    );
 }
